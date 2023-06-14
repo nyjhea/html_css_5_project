@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Matematikai műveletek</title>
+	<script>
+		function isNumber(value) {
+			return /^\d+(\.\d+)?$/.test(value);
+		}
+
+		function calculate(operation) {
+			var num1 = document.getElementById("num1").value;
+			var num2 = document.getElementById("num2").value;
+			if (!isNumber(num1) || !isNumber(num2)) {
+				alert("Kérjük, csak számokat adjon meg!");
+				return;
+			}
+			num1 = parseFloat(num1);
+			num2 = parseFloat(num2);
+			var result;
+			if (operation === "+") {
+				result = num1 + num2;
+			} else if (operation === "-") {
+				result = num1 - num2;
+			} else if (operation === "*") {
+				result = num1 * num2;
+			} else if (operation === "/") {
+				if (num2 === 0) {
+					alert("Nullával nem lehet osztani!");
+					return;
+				}
+				result = num1 / num2;
+			}
+			var history = document.getElementById("history");
+			var entry = num1 + " " + operation + " " + num2 + " = " + result;
+			history.innerHTML += "<li>" + entry + "</li>";
+			document.getElementById("result").innerHTML = result;
+		}
+	</script>
+</head>
+<body>
+	<h1>Matematikai műveletek</h1>
+	<label for="num1">Első szám:</label>
+	<input type="text" id="num1">
+	<label for="num2">Második szám:</label>
+	<input type="text" id="num2">
+	<br><br>
+	<button onclick="calculate('+')">Összeadás</button>
+	<button onclick="calculate('-')">Kivonás</button>
+	<button onclick="calculate('*')">Szorzás</button>
+	<button onclick="calculate('/')">Osztás</button>
+	<br><br>
+	<label>Eredmény:</label>
+	<span id="result">0</span>
+	<br><br>
+	<label>Előzmények:</label>
+	<ul id="history"></ul>
+</body>
+</html>

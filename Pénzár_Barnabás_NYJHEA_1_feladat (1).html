@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Téglalapok</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script>
+		// A téglalapokat tároló tömb
+		var rectangles = [];
+
+		// Az összesítő adatakat tároló objektum
+		var summary = {
+			count: 0,
+			area: 0,
+			perimeter: 0,
+			averageArea: 0,
+			averagePerimeter: 0
+		};
+
+		// Az adatok validálása
+		function validateData(x, y, width, height) {
+			if (x < 0 || y < 0 || width <= 0 || height <= 0) {
+				alert("Hibás adatok!");
+				return false;
+			}
+			for (var i = 0; i < rectangles.length; i++) {
+				var rect = rectangles[i];
+				if (x < rect.x + rect.width &&
+					x + width > rect.x &&
+					y < rect.y + rect.height &&
+					y + height > rect.y) {
+					alert("Az új téglalap átfedésben van egy meglévővel!");
+					return false;
+				}
+			}
+			return true;
+		}
+
+		// Az új téglalap hozzáadása a listához
+		function addRectangle() {
+			var x = parseInt(document.getElementById("x").value);
+			var y = parseInt(document.getElementById("y").value);
+			var width = parseInt(document.getElementById("width").value);
+			var height = parseInt(document.getElementById("height").value);
+			if (validateData(x, y, width, height)) {
+				rectangles.push({
+					x: x,
+					y: y,
+					width: width,
+					height: height
+				});
+				updateList();
+				updateSummary();
+			}
+		}
+
+		// A listaelemek frissítése
+		function updateList() {
+			var list = document.getElementById("list");
+			list.innerHTML = "";
+			for (var i = 0; i < rectangles.length; i++) {
+				var rect = rectangles[i];
+				var li = document.createElement("li");
+				li.textContent = "Téglalap " + (i + 1) + ": " +
+					"x=" + rect.x + ", y=" + rect.y + ", " +
+					"szélesség=" + rect.width + ", magasság=" + rect.height + ", " +
+					"terület=" + (rect.width * rect.height) + ", " +
+					"kerület=" + (2 * (rect.width + rect.height));
+				list.appendChild(li);
+			}
+		}
+
+		// Az összesítő adatok frissítése
+		function updateSummary() {
+			var count = rectangles.length;
+			var area = 0;
+			var perimeter = 0;
+			for (var i = 0; i < count; i++) {
+				var rect = rectangles[i];
+				area += rect.width * rect.height;
+				perimeter += 2 * (rect.width + rect.height);
+			}
+			var averageArea = area / count;
+			var averagePerimeter = perimeter / count;
+			summary.count = count;
+			summary.area = area;
+			summary.perimeter = perimeter;
+			summary.averageArea = averageArea;
+			summary.averagePerimeter = averagePerimeter;
+			var summaryElem = document.getElementById("summary");
+			summaryElem.innerHTML = "Összes téglalap: " + count +
+				", össz terület: " + area +
+				", össz kerület: " + perimeter +
+				", átlag terület: " + averageArea.toFixed(2) +
+				", átlag kerület: " + averagePerimeter.toFixed(2);
+		}
+	</script>
+</head>
+<body>
+	<h1>Téglalapok</h1>
+	<p>
+		<label for="x">Bal alsó sarok X:</label>
+		<input type="number" id="x" required>
+	</p>
+	<p>
+		<label for="y">Bal alsó sarok Y:</label>
+		<input type="number" id="y" required>
+	</p>
+	<p>
+		<label for="width">Szélesség:</label>
+		<input type="number" id="width" required>
+	</p>
+	<p>
+		<label for="height">Magasság:</label>
+		<input type="number" id="height" required>
+	</p>
+	<button onclick="addRectangle()">Hozzáad</button>
+	<h2>Téglalapok listája</h2>
+	<ul id="list"></ul>
+	<h2>Összesítő adatok</h2>
+	<p id="summary"></p>
+</body>
+</html>
